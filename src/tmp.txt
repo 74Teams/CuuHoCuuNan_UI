@@ -1,0 +1,91 @@
+
+{visibleNotifications.slice(0, 3).map((notification) => {
+                const style = getNotificationStyle(notification.type);
+
+                return (
+                  <div
+                    key={notification.id}
+                    className={`p-3 rounded-xl border border-l-4 shadow-sm flex flex-col gap-2.5 transition-all ${style.wrapper}`}
+                  >
+                    <div className="flex items-start gap-2.5">
+                      {/* ICON NHỎ GỌN HƠN (w-8 h-8 thay vì w-10 h-10) */}
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border shadow-sm ${style.iconBg}`}
+                      >
+                        {style.icon}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start gap-2">
+                          <h3
+                            className={`text-xs font-black uppercase tracking-tight leading-snug truncate ${style.title}`}
+                          >
+                            {notification.title}
+                          </h3>
+                          <span
+                            suppressHydrationWarning
+                            className="text-[9px] text-slate-500 font-medium flex items-center gap-1 shrink-0 mt-0.5"
+                          >
+                            <Clock3 className="w-2.5 h-2.5" />{" "}
+                            {formatTimeAgoSafe(notification.createdAt)}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 mt-1 leading-snug line-clamp-2">
+                          {notification.message}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* NÚT HÀNH ĐỘNG DÀNH RIÊNG CHO NHIỆM VỤ MỚI */}
+                    {notification.type === "NEW_MISSION_ASSIGNED" && (
+                      <div className="flex gap-2 pt-2 mt-0.5 border-t border-orange-200/50">
+                        <button
+                          onClick={() => {
+                            toast.success("Đã tiếp nhận nhiệm vụ!", {
+                              description: "Đang tải dữ liệu bản đồ...",
+                            });
+                            setTimeout(() => setActiveTab("navigate"), 800);
+                          }}
+                          className="flex-1 bg-orange-600 hover:bg-orange-700 text-white text-[11px] py-1.5 rounded-lg font-bold shadow-sm active:scale-95 transition-all"
+                        >
+                          TIẾP NHẬN
+                        </button>
+                        <button
+                          onClick={() =>
+                            toast.error("Đã từ chối nhiệm vụ", {
+                              description: "Đã báo cáo về Trung tâm điều phối.",
+                            })
+                          }
+                          className="flex-1 bg-white border border-orange-200 text-orange-600 hover:bg-orange-50 text-[11px] py-1.5 rounded-lg font-bold active:scale-95 transition-all"
+                        >
+                          TỪ CHỐI
+                        </button>
+                      </div>
+                    )}
+
+                    {/* NÚT HÀNH ĐỘNG CHO NHIỆM VỤ BỊ HỦY */}
+                    {notification.type === "MISSION_CANCELED" && (
+                      <div className="flex gap-2 pt-2 mt-0.5 border-t border-red-200/50">
+                        <button
+                          onClick={() =>
+                            toast.success("Đã xác nhận hủy nhiệm vụ.")
+                          }
+                          className="flex-1 bg-white border border-red-200 text-red-600 hover:bg-red-50 text-[11px] py-1.5 rounded-lg font-bold shadow-sm active:scale-95 transition-all"
+                        >
+                          XÁC NHẬN ĐÃ ĐỌC
+                        </button>
+                      </div>
+                    )}
+                    {notification.type === "SYSTEM_ALERT" && (
+                      <div className="flex gap-2 pt-2 mt-0.5 border-t border-red-200/50">
+                        <button
+                          onClick={() => toast.success("Đã xác nhận.")}
+                          className="flex-1 bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 text-[11px] py-1.5 rounded-lg font-bold shadow-sm active:scale-95 transition-all"
+                        >
+                          XÁC NHẬN ĐÃ ĐỌC
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
