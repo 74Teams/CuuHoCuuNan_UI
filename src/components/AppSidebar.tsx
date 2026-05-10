@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import {
@@ -44,31 +43,34 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
+import Image from "next/image";
 
 import { dictPriority, dictType } from "@/constants/dictionary";
+import {
+  type CitizenRequestSubmissionInput,
+  useCreateCitizenRequestMutation,
+} from "@/lib/api/citizen-requests";
 import CitizenRequestDetailDialog from "./citizen/CitizenRequestDetailDialog";
 
-// IMPORT INTERFACE MỚI
 import {
   EmergencyCategory,
   OsmAddressResult,
   RequestDetail,
   RequestPriority,
 } from "@/types/request";
+import { toast } from "sonner";
 
-export function AppSidebar({
-  requests,
-  onAddRequest,
-}: {
-  requests: RequestDetail[];
-  onAddRequest: (data: RequestDetail) => void;
-}) {
-  const pathname = usePathname();
+export function AppSidebar({ requests }: { requests: RequestDetail[] }) {
+  const createRequestMutation = useCreateCitizenRequestMutation();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // State cho Form
+  const [emergencyType, setEmergencyType] =
+    useState<EmergencyCategory>("FLOOD");
+  const [priority, setPriority] = useState<RequestPriority>("CRITICAL");
+  const [description, setDescription] = useState("");
   const [addressInput, setAddressInput] = useState("");
+  const [landmarkInput, setLandmarkInput] = useState("");
   const [gpsStatus, setGpsStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -83,11 +85,11 @@ export function AppSidebar({
     { file: File; preview: string; type: string }[]
   >([]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!gpsCoords) {
-      alert("Vui lòng lấy tọa độ GPS trước khi gửi!");
+      toast.error("Vui lòng lấy tọa độ GPS trước khi gửi!");
       return;
     }
 
@@ -95,43 +97,34 @@ export function AppSidebar({
       .split(",")
       .map((coord) => parseFloat(coord.trim()));
 
-    // TẠO OBJECT THEO ĐÚNG CHUẨN MỚI NHẤT
-    const newRequest: RequestDetail = {
-      id: crypto.randomUUID(),
-      userId: "temp-user",
-      requestedBy: {
-        id: "temp-user",
-        fullName: "Người dân (Demo)",
-        phoneNumber: "0900000000",
-        email: "", // Bắt buộc là string theo type.ts của bạn
-      },
-      emergencyType: "FLOOD" as EmergencyCategory,
-      priority: "CRITICAL" as RequestPriority,
-      status: "PENDING",
-      description: "Dữ liệu test tạm thời hiển thị trên map...",
-      location: {
-        id: crypto.randomUUID(),
-        latitude: lat,
-        longitude: lng,
-        address: addressInput || "Chưa có địa chỉ",
-        landmark: "",
-      },
-      // Sử dụng `mediaUrl` dạng mảng theo đúng type.ts
-      mediaUrl: attachments.map((item) => item.preview),
-      submittedTime: new Date().toISOString(),
-      missions: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+    const payload: CitizenRequestSubmissionInput = {
+      emergencyType,
+      priority,
+      description,
+      address: addressInput || "Chưa có địa chỉ",
+      latitude: lat,
+      longitude: lng,
+      landmark: landmarkInput || undefined,
+      medias: attachments.map((item) => item.file),
     };
 
-    onAddRequest(newRequest);
-    alert("Đã gửi yêu cầu thành công!");
-    setIsDialogOpen(false);
-
-    // Reset form data sau khi gửi
-    setAttachments([]);
-    setGpsCoords("");
-    setAddressInput("");
+    try {
+      await createRequestMutation.mutateAsync(payload);
+      toast.success("Đã gửi yêu cầu thành công!");
+      setIsDialogOpen(false);
+      setAttachments([]);
+      setGpsCoords("");
+      setAddressInput("");
+      setLandmarkInput("");
+      setDescription("");
+      setEmergencyType("FLOOD");
+      setPriority("CRITICAL");
+    } catch (error) {
+      toast.error("Không thể gửi yêu cầu", {
+        description:
+          error instanceof Error ? error.message : "Vui lòng thử lại sau.",
+      });
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,7 +156,7 @@ export function AppSidebar({
         );
         setTimeout(() => setGpsStatus("idle"), 3000);
       },
-      (err) => {
+      () => {
         setGpsStatus("error");
         setTimeout(() => setGpsStatus("idle"), 3000);
       },
@@ -329,7 +322,12 @@ export function AppSidebar({
                   <label className="block text-sm font-semibold text-slate-800 mb-1">
                     Loại sự cố *
                   </label>
-                  <Select>
+                  <Select
+                    value={emergencyType}
+                    onValueChange={(value) =>
+                      setEmergencyType(value as EmergencyCategory)
+                    }
+                  >
                     <SelectTrigger className="bg-slate-50 border-slate-200">
                       <SelectValue placeholder="-- Chọn sự cố --" />
                     </SelectTrigger>
@@ -345,7 +343,12 @@ export function AppSidebar({
                   <label className="block text-sm font-semibold text-slate-800 mb-1">
                     Mức độ ưu tiên *
                   </label>
-                  <Select>
+                  <Select
+                    value={priority}
+                    onValueChange={(value) =>
+                      setPriority(value as RequestPriority)
+                    }
+                  >
                     <SelectTrigger className="bg-slate-50 border-slate-200 text-red-600 font-medium">
                       <SelectValue placeholder="-- Chọn mức độ --" />
                     </SelectTrigger>
@@ -470,6 +473,8 @@ export function AppSidebar({
                     <Input
                       className="bg-white border-slate-200"
                       placeholder="Ví dụ: Gần trường học, ngã tư..."
+                      value={landmarkInput}
+                      onChange={(e) => setLandmarkInput(e.target.value)}
                     />
                   </div>
                 </div>
@@ -482,6 +487,8 @@ export function AppSidebar({
                 <Textarea
                   className="bg-slate-50 border-slate-200 min-h-[80px]"
                   placeholder="Nước ngập đến đâu? Có trẻ em/người già không?..."
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
 
@@ -496,9 +503,12 @@ export function AppSidebar({
                       className="relative w-16 h-16 rounded-md overflow-hidden border border-slate-200 bg-white"
                     >
                       {item.type === "image" ? (
-                        <img
+                        <Image
                           src={item.preview}
-                          className="w-full h-full object-cover"
+                          alt="Tệp đính kèm"
+                          fill
+                          unoptimized
+                          className="object-cover"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
@@ -533,8 +543,12 @@ export function AppSidebar({
               <div className="flex justify-end pt-2">
                 <Button
                   type="submit"
+                  disabled={createRequestMutation.isPending}
                   className="bg-[#003da5] hover:bg-blue-800 active:bg-blue-900 active:scale-95 text-white px-10 h-12 text-md font-bold shadow-lg transition-all duration-200"
                 >
+                  {createRequestMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : null}
                   GỬI YÊU CẦU CỨU TRỢ <Send className="w-4 h-4 ml-2" />
                 </Button>
               </div>

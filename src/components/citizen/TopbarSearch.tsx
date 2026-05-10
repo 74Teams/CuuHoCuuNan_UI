@@ -2,16 +2,19 @@
 
 import { Input } from "@/components/ui/input";
 import { dictType } from "@/constants/dictionary";
-import { MOCK_REQUESTS } from "@/data/mockCitizenPage";
-import { RequestDetail } from "@/types/request";
+import { useCitizenRequestsQuery } from "@/lib/api/citizen-requests";
+import type { RequestDetail } from "@/types/request";
 import { AlertTriangle, MapPin, Search, User } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import FlyToLocationButton from "../FlyToLocationButton";
+import { useEffect } from "react";
+const EMPTY_REQUESTS: RequestDetail[] = [];
 
 export default function TopbarSearch() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [results, setResults] = useState<RequestDetail[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { data } = useCitizenRequestsQuery();
+  const requests = data?.items ?? EMPTY_REQUESTS;
 
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
@@ -37,22 +40,27 @@ export default function TopbarSearch() {
     setSearchTerm(term);
 
     if (term.trim() === "") {
-      setResults([]);
       setIsDropdownOpen(false);
       return;
     }
 
-    const lowerTerm = term.toLowerCase();
-    const filtered = MOCK_REQUESTS.filter(
+    setIsDropdownOpen(true);
+  };
+
+  const results = useMemo(() => {
+    if (searchTerm.trim() === "") {
+      return [];
+    }
+
+    const lowerTerm = searchTerm.toLowerCase();
+
+    return requests.filter(
       (req) =>
         req.location?.address?.toLowerCase().includes(lowerTerm) ||
         req.requestedBy?.fullName?.toLowerCase().includes(lowerTerm) ||
         dictType[req.emergencyType]?.toLowerCase().includes(lowerTerm),
     );
-
-    setResults(filtered);
-    setIsDropdownOpen(true);
-  };
+  }, [requests, searchTerm]);
 
   const handleSelectResult = (request: RequestDetail) => {
     setSearchTerm("");

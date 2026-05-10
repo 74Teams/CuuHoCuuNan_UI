@@ -1,12 +1,12 @@
-import TopbarSearch from '@/components/citizen/TopbarSearch'
-import { Button } from '@/components/ui/button'
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
-import { Activity, Bell, User } from 'lucide-react'
+import TopbarSearch from "@/components/citizen/TopbarSearch";
+import { Button } from "@/components/ui/button";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Activity, Bell, User } from "lucide-react";
 
 export default function CitizenLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <SidebarProvider>
@@ -65,5 +65,5 @@ export default function CitizenLayout({
         </div>
       </div>
     </SidebarProvider>
-  )
+  );
 }
