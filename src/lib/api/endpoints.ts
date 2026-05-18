@@ -10,11 +10,12 @@ export const apiRoutes = {
     forgotPassword: "/auth/forgot-password",
     resetPassword: "/auth/reset-password",
     contact: "/auth/contact",
+    refresh: "/auth/refresh",
   },
   users: "/users",
-  locations: "/locations",
+  locations: "Location",
   requests: "/requests",
-  rescueTeams: "/rescueteam",
+  rescueTeams: "/RescueTeam",
   missions: "/missions",
   reports: "/reports",
   roles: "/roles",
@@ -42,7 +43,6 @@ export const apiRouteBuilders = {
     member: (teamId: string, memberId: string) =>
       `${apiRoutes.rescueTeams}/${teamId}/member/${memberId}`,
     missions: (teamId: string) => `${apiRoutes.rescueTeams}/${teamId}/missions`,
-    memberDashboard: () => `${apiRoutes.rescueTeams}/member/dashboard`,
   },
   missions: {
     byId: (missionId: string) => `${apiRoutes.missions}/${missionId}`,

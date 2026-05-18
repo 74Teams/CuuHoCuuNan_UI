@@ -23,12 +23,14 @@
 ## 1. Authentication
 
 ### 1.1 Register
+
 - **Method:** `POST`
 - **Endpoint:** `/api/auth/register`
 - **Auth Required:** ❌ No
 - **Description:** Đăng ký tài khoản mới
 
 **Request:**
+
 ```json
 {
   "email": "user@example.com",
@@ -40,6 +42,7 @@
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -50,6 +53,7 @@
 ```
 
 **Error (400 Bad Request):**
+
 ```json
 {
   "success": false,
@@ -61,12 +65,14 @@
 ---
 
 ### 1.2 Login
+
 - **Method:** `POST`
 - **Endpoint:** `/api/auth/login`
 - **Auth Required:** ❌ No
 - **Description:** Đăng nhập hệ thống
 
 **Request:**
+
 ```json
 {
   "email": "user@example.com",
@@ -75,6 +81,7 @@
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -97,17 +104,20 @@
 ---
 
 ### 1.3 Get Profile
+
 - **Method:** `GET`
 - **Endpoint:** `/api/auth/profile`
 - **Auth Required:** ✅ Yes (Bearer Token)
 - **Description:** Lấy thông tin profile người dùng hiện tại
 
 **Headers:**
+
 ```
 Authorization: Bearer {accessToken}
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -115,7 +125,7 @@ Authorization: Bearer {accessToken}
   "message": "Lấy thông tin người dùng thành công",
   "data": {
     "id": "550e8400-e29b-41d4-a716-446655440000",
-    "fullname": "Nguyễn Văn A",
+    "fullName": "Nguyễn Văn A",
     "email": "user@example.com",
     "phoneNumber": "0912345678",
     "address": {
@@ -132,12 +142,14 @@ Authorization: Bearer {accessToken}
 ---
 
 ### 1.4 Update Profile
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/auth/profile`
 - **Auth Required:** ✅ Yes
 - **Description:** Cập nhật thông tin profile
 
 **Request:**
+
 ```json
 {
   "fullName": "Nguyễn Văn A",
@@ -152,6 +164,7 @@ Authorization: Bearer {accessToken}
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -163,17 +176,20 @@ Authorization: Bearer {accessToken}
 ---
 
 ### 1.5 Upload Avatar
+
 - **Method:** `POST`
 - **Endpoint:** `/api/auth/avatar`
 - **Auth Required:** ✅ Yes
 - **Description:** Upload ảnh đại diện
 
 **Request:** (Form-data)
+
 ```
 file: [image file]
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -189,12 +205,14 @@ file: [image file]
 ---
 
 ### 1.6 Forgot Password
+
 - **Method:** `POST`
 - **Endpoint:** `/api/auth/forgot-password`
 - **Auth Required:** ❌ No
 - **Description:** Gửi link reset password qua email
 
 **Request:**
+
 ```json
 {
   "email": "user@example.com"
@@ -202,6 +220,7 @@ file: [image file]
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -213,12 +232,14 @@ file: [image file]
 ---
 
 ### 1.7 Reset Password
+
 - **Method:** `POST`
 - **Endpoint:** `/api/auth/reset-password`
 - **Auth Required:** ❌ No
 - **Description:** Reset password với token từ email
 
 **Request:**
+
 ```json
 {
   "email": "user@example.com",
@@ -228,6 +249,7 @@ file: [image file]
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -241,12 +263,14 @@ file: [image file]
 ## 2. Users
 
 ### 2.1 Create User
+
 - **Method:** `POST`
 - **Endpoint:** `/api/users`
 - **Auth Required:** ✅ Yes (Admin)
 - **Description:** Tạo người dùng mới
 
 **Request:**
+
 ```json
 {
   "email": "newuser@example.com",
@@ -258,6 +282,7 @@ file: [image file]
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -270,17 +295,20 @@ file: [image file]
 ---
 
 ### 2.2 Get All Users
+
 - **Method:** `GET`
 - **Endpoint:** `/api/users`
 - **Auth Required:** ✅ Yes (Admin)
 - **Description:** Lấy danh sách tất cả người dùng
 
 **Query Parameters:**
+
 ```
 ?pageNumber=1&pageSize=10
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -310,12 +338,14 @@ file: [image file]
 ---
 
 ### 2.3 Get User by ID
+
 - **Method:** `GET`
 - **Endpoint:** `/api/users/{userId}`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy thông tin user theo ID
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -335,12 +365,14 @@ file: [image file]
 ---
 
 ### 2.4 Update User
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/users/{userId}`
 - **Auth Required:** ✅ Yes (Admin or Self)
 - **Description:** Cập nhật thông tin user
 
 **Request:**
+
 ```json
 {
   "fullName": "Nguyễn Văn A Updated",
@@ -350,6 +382,7 @@ file: [image file]
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -361,12 +394,14 @@ file: [image file]
 ---
 
 ### 2.5 Delete User
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/users/{userId}`
 - **Auth Required:** ✅ Yes (Admin)
 - **Description:** Xóa người dùng
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -380,17 +415,20 @@ file: [image file]
 ## 3. Locations
 
 ### 3.1 Get All Locations
+
 - **Method:** `GET`
 - **Endpoint:** `/api/locations`
 - **Auth Required:** ❌ No
 - **Description:** Lấy danh sách tất cả vị trí
 
 **Query Parameters:**
+
 ```
 ?pageNumber=1&pageSize=20
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -412,12 +450,14 @@ file: [image file]
 ---
 
 ### 3.2 Get Location by ID
+
 - **Method:** `GET`
 - **Endpoint:** `/api/locations/{locationId}`
 - **Auth Required:** ❌ No
 - **Description:** Lấy chi tiết vị trí
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -437,12 +477,14 @@ file: [image file]
 ---
 
 ### 3.3 Create Location
+
 - **Method:** `POST`
 - **Endpoint:** `/api/locations`
 - **Auth Required:** ✅ Yes (Dispatcher, Admin)
 - **Description:** Tạo vị trí mới
 
 **Request:**
+
 ```json
 {
   "latitude": 21.0285,
@@ -453,6 +495,7 @@ file: [image file]
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -472,12 +515,14 @@ file: [image file]
 ---
 
 ### 3.4 Update Location
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/locations/{locationId}`
 - **Auth Required:** ✅ Yes (Dispatcher, Admin)
 - **Description:** Cập nhật thông tin vị trí
 
 **Request:**
+
 ```json
 {
   "address": "456 Đường Trần Hưng Đạo, Hà Nội",
@@ -486,6 +531,7 @@ file: [image file]
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -497,12 +543,14 @@ file: [image file]
 ---
 
 ### 3.5 Delete Location
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/locations/{locationId}`
 - **Auth Required:** ✅ Yes (Admin)
 - **Description:** Xóa vị trí
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -516,12 +564,14 @@ file: [image file]
 ## 4. Requests (Yêu Cầu Cứu Hộ)
 
 ### 4.1 Create Request
+
 - **Method:** `POST`
 - **Endpoint:** `/api/requests`
 - **Auth Required:** ❌ No (Public)
 - **Description:** Tạo yêu cầu cứu hộ mới
 
 **Request:** (Form-data)
+
 ```
 emergencyType: 1 (FIRE, FLOOD, EARTHQUAKE, MEDICAL_EMERGENCY, TRAFFIC_EMERGENCY, BUILDING_COLLAPSE, NATURAL_DISASTER, OTHER)
 priority: 1 (CRITICAL=1, HIGH=2, MEDIUM=3, LOW=4)
@@ -531,6 +581,7 @@ medias: [image1.jpg, image2.jpg]
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -545,12 +596,14 @@ medias: [image1.jpg, image2.jpg]
 ---
 
 ### 4.2 Get All Requests (Pagination & Filter)
+
 - **Method:** `GET`
 - **Endpoint:** `/api/requests`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy danh sách yêu cầu cứu hộ (có pagination & filter)
 
 **Query Parameters:**
+
 ```
 ?pageNumber=1
 &pageSize=10
@@ -561,6 +614,7 @@ medias: [image1.jpg, image2.jpg]
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -607,12 +661,14 @@ medias: [image1.jpg, image2.jpg]
 ---
 
 ### 4.3 Get Request by ID
+
 - **Method:** `GET`
 - **Endpoint:** `/api/requests/{requestId}`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy chi tiết yêu cầu cứu hộ
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -659,12 +715,14 @@ medias: [image1.jpg, image2.jpg]
 ---
 
 ### 4.4 Update Request
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/requests/{requestId}`
 - **Auth Required:** ✅ Yes (Creator or Dispatcher)
 - **Description:** Cập nhật yêu cầu cứu hộ (chỉ khi status = PENDING)
 
 **Request:** (Form-data)
+
 ```
 emergencyType: 1
 priority: 2
@@ -674,6 +732,7 @@ medias: [image1.jpg, image2.jpg]
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -688,12 +747,14 @@ medias: [image1.jpg, image2.jpg]
 ---
 
 ### 4.5 Delete Request
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/requests/{requestId}`
 - **Auth Required:** ✅ Yes (Creator or Admin)
 - **Description:** Xóa yêu cầu cứu hộ (chỉ khi status = PENDING)
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -708,12 +769,14 @@ medias: [image1.jpg, image2.jpg]
 ---
 
 ### 4.6 Change Request Status
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/requests/{requestId}/status`
 - **Auth Required:** ✅ Yes (Dispatcher)
 - **Description:** Thay đổi trạng thái yêu cầu (PENDING→ACCEPTED→IN_PROGRESS→COMPLETED)
 
 **Request:**
+
 ```json
 {
   "newStatus": "ACCEPTED",
@@ -722,6 +785,7 @@ medias: [image1.jpg, image2.jpg]
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -733,12 +797,14 @@ medias: [image1.jpg, image2.jpg]
 ---
 
 ### 4.7 Get Request History
+
 - **Method:** `GET`
 - **Endpoint:** `/api/requests/{requestId}/history`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy lịch sử thay đổi trạng thái yêu cầu
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -780,17 +846,20 @@ medias: [image1.jpg, image2.jpg]
 ## 5. Rescue Teams
 
 ### 5.1 Get All Rescue Teams
+
 - **Method:** `GET`
 - **Endpoint:** `/api/rescue-teams`
 - **Auth Required:** ✅ Yes (Dispatcher, RescuerLeader)
 - **Description:** Lấy danh sách tất cả đội cứu hộ
 
 **Query Parameters:**
+
 ```
 ?pageNumber=1&pageSize=10&status=ACTIVE
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -817,12 +886,14 @@ medias: [image1.jpg, image2.jpg]
 ---
 
 ### 5.2 Get Rescue Team by ID
+
 - **Method:** `GET`
 - **Endpoint:** `/api/rescue-teams/{teamId}`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy chi tiết đội cứu hộ
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -848,12 +919,14 @@ medias: [image1.jpg, image2.jpg]
 ---
 
 ### 5.3 Create Rescue Team
+
 - **Method:** `POST`
 - **Endpoint:** `/api/rescue-teams`
 - **Auth Required:** ✅ Yes (Admin)
 - **Description:** Tạo đội cứu hộ mới
 
 **Request:**
+
 ```json
 {
   "name": "Đội Cứu Hộ 2",
@@ -863,6 +936,7 @@ medias: [image1.jpg, image2.jpg]
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -874,17 +948,20 @@ medias: [image1.jpg, image2.jpg]
 ---
 
 ### 5.4 Update Team Status
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/rescue-teams/{teamId}/status/{newStatus}`
 - **Auth Required:** ✅ Yes (Dispatcher, Admin)
 - **Description:** Cập nhật trạng thái đội (ACTIVE, INACTIVE, ON_DUTY, OFF_DUTY)
 
 **Path Parameters:**
+
 ```
 newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -896,12 +973,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 5.5 Delete Rescue Team
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/rescue-teams/{teamId}`
 - **Auth Required:** ✅ Yes (Admin)
 - **Description:** Xóa đội cứu hộ (soft delete)
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -913,12 +992,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 5.6 Get Team Members
+
 - **Method:** `GET`
 - **Endpoint:** `/api/rescue-teams/{teamId}/members`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy danh sách thành viên của đội
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -944,12 +1025,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 5.7 Add Member to Team
+
 - **Method:** `POST`
 - **Endpoint:** `/api/rescue-teams/{teamId}/member/{memberId}`
 - **Auth Required:** ✅ Yes (Team Leader, Admin)
 - **Description:** Thêm thành viên vào đội
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -961,12 +1044,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 5.8 Remove Member from Team
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/rescue-teams/{teamId}/member/{memberId}`
 - **Auth Required:** ✅ Yes (Team Leader, Admin)
 - **Description:** Xóa thành viên khỏi đội
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -978,17 +1063,20 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 5.9 Get Team Missions
+
 - **Method:** `GET`
 - **Endpoint:** `/api/rescue-teams/{teamId}/missions`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy danh sách nhiệm vụ của đội
 
 **Query Parameters:**
+
 ```
 ?pageNumber=1&pageSize=10&status=IN_PROGRESS
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1014,12 +1102,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ## 6. Missions
 
 ### 6.1 Create Mission
+
 - **Method:** `POST`
 - **Endpoint:** `/api/missions`
 - **Auth Required:** ✅ Yes (Dispatcher)
 - **Description:** Tạo nhiệm vụ mới (gán đội cho request)
 
 **Request:**
+
 ```json
 {
   "requestId": "550e8400-e29b-41d4-a716-446655440000",
@@ -1029,6 +1119,7 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -1043,12 +1134,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 6.2 Get Mission by ID
+
 - **Method:** `GET`
 - **Endpoint:** `/api/missions/{missionId}`
 - **Auth Required:** ✅ Yes (Dispatcher, Rescuer)
 - **Description:** Lấy chi tiết nhiệm vụ
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1083,17 +1176,20 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 6.3 Get All Missions (Pagination)
+
 - **Method:** `GET`
 - **Endpoint:** `/api/missions`
 - **Auth Required:** ✅ Yes (Dispatcher)
 - **Description:** Lấy danh sách nhiệm vụ (có phân trang)
 
 **Query Parameters:**
+
 ```
 ?pageNumber=1&pageSize=10&status=IN_PROGRESS
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1121,12 +1217,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 6.4 Update Mission Status
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/missions/{missionId}/status`
 - **Auth Required:** ✅ Yes (Rescuer, Dispatcher)
 - **Description:** Cập nhật trạng thái nhiệm vụ (ASSIGNED→EN_ROUTE→ON_SITE→IN_PROGRESS)
 
 **Request:**
+
 ```json
 {
   "status": "EN_ROUTE",
@@ -1136,6 +1234,7 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1147,12 +1246,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 6.5 Finish Mission
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/missions/{missionId}/finish`
 - **Auth Required:** ✅ Yes (Rescuer, Dispatcher)
 - **Description:** Đánh dấu nhiệm vụ hoàn thành
 
 **Request:**
+
 ```json
 {
   "changedById": "550e8400-e29b-41d4-a716-446655440003",
@@ -1161,6 +1262,7 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1172,12 +1274,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 6.6 Abort Mission
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/missions/{missionId}/abort`
 - **Auth Required:** ✅ Yes (Rescuer, Dispatcher)
 - **Description:** Hủy nhiệm vụ
 
 **Request:**
+
 ```json
 {
   "changedById": "550e8400-e29b-41d4-a716-446655440003",
@@ -1186,6 +1290,7 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1197,12 +1302,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 6.7 Get Mission History
+
 - **Method:** `GET`
 - **Endpoint:** `/api/missions/{missionId}/history`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy lịch sử thay đổi trạng thái nhiệm vụ (Timeline)
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1231,12 +1338,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ## 7. Reports
 
 ### 7.1 Create Report
+
 - **Method:** `POST`
 - **Endpoint:** `/api/reports`
 - **Auth Required:** ✅ Yes (Rescuer, Dispatcher)
 - **Description:** Tạo báo cáo cho nhiệm vụ
 
 **Request:**
+
 ```json
 {
   "missionId": "550e8400-e29b-41d4-a716-446655440003",
@@ -1253,6 +1362,7 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -1267,17 +1377,20 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 7.2 Get All Reports
+
 - **Method:** `GET`
 - **Endpoint:** `/api/reports`
 - **Auth Required:** ✅ Yes (Dispatcher, Admin)
 - **Description:** Lấy danh sách tất cả báo cáo
 
 **Query Parameters:**
+
 ```
 ?pageNumber=1&pageSize=10&type=SUMMARY&outcome=SUCCESS
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1316,12 +1429,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 7.3 Get Report by ID
+
 - **Method:** `GET`
 - **Endpoint:** `/api/reports/{reportId}`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy chi tiết báo cáo
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1361,12 +1476,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 7.4 Update Report
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/reports/{reportId}`
 - **Auth Required:** ✅ Yes (Creator or Admin)
 - **Description:** Cập nhật báo cáo
 
 **Request:**
+
 ```json
 {
   "content": "Đã dập tắt cháy tại tầng 2, không có người bị thương (cập nhật lúc 12:00)",
@@ -1378,6 +1495,7 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1389,12 +1507,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 7.5 Delete Report
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/reports/{reportId}`
 - **Auth Required:** ✅ Yes (Creator or Admin)
 - **Description:** Xóa báo cáo
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1406,12 +1526,14 @@ newStatus: ACTIVE | INACTIVE | ON_DUTY | OFF_DUTY
 ---
 
 ### 7.6 Export Report to PDF
+
 - **Method:** `GET`
 - **Endpoint:** `/api/reports/{reportId}/export-pdf`
 - **Auth Required:** ✅ Yes
 - **Description:** Xuất báo cáo thành file PDF
 
 **Response:** (File PDF)
+
 ```
 Content-Type: application/pdf
 Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
@@ -1420,12 +1542,14 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ---
 
 ### 7.7 Get Reports by Mission
+
 - **Method:** `GET`
 - **Endpoint:** `/api/reports/mission/{missionId}`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy tất cả báo cáo của 1 nhiệm vụ
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1450,12 +1574,14 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ## 8. Contacts
 
 ### 8.1 Create Contact
+
 - **Method:** `POST`
 - **Endpoint:** `/api/auth/contact`
 - **Auth Required:** ✅ Yes
 - **Description:** Thêm liên hệ khẩn cấp cho người dùng
 
 **Request:**
+
 ```json
 {
   "name": "Nguyễn Văn B",
@@ -1465,6 +1591,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1477,12 +1604,14 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ---
 
 ### 8.2 Get All Contacts
+
 - **Method:** `GET`
 - **Endpoint:** `/api/auth/contact`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy danh sách liên hệ khẩn cấp
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1503,12 +1632,14 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ---
 
 ### 8.3 Get Contact by ID
+
 - **Method:** `GET`
 - **Endpoint:** `/api/auth/contact/{contactId}`
 - **Auth Required:** ✅ Yes
 - **Description:** Lấy chi tiết liên hệ
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1527,12 +1658,14 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ---
 
 ### 8.4 Update Contact
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/auth/contact/{contactId}`
 - **Auth Required:** ✅ Yes
 - **Description:** Cập nhật liên hệ
 
 **Request:**
+
 ```json
 {
   "name": "Nguyễn Văn B Updated",
@@ -1542,6 +1675,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1553,12 +1687,14 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ---
 
 ### 8.5 Delete Contact
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/auth/contact/{contactId}`
 - **Auth Required:** ✅ Yes
 - **Description:** Xóa liên hệ
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1572,12 +1708,14 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ## 9. Roles
 
 ### 9.1 Create Role
+
 - **Method:** `POST`
 - **Endpoint:** `/api/roles`
 - **Auth Required:** ✅ Yes (Admin)
 - **Description:** Tạo role mới
 
 **Request:**
+
 ```json
 {
   "name": "RescuerLeader",
@@ -1586,6 +1724,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -1597,12 +1736,14 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ---
 
 ### 9.2 Get All Roles
+
 - **Method:** `GET`
 - **Endpoint:** `/api/roles`
 - **Auth Required:** ✅ Yes (Admin)
 - **Description:** Lấy danh sách tất cả role
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1641,12 +1782,14 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ---
 
 ### 9.3 Get Role by ID
+
 - **Method:** `GET`
 - **Endpoint:** `/api/roles/{roleId}`
 - **Auth Required:** ✅ Yes (Admin)
 - **Description:** Lấy chi tiết role
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1663,12 +1806,14 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ---
 
 ### 9.4 Update Role
+
 - **Method:** `PUT`
 - **Endpoint:** `/api/roles/{roleId}`
 - **Auth Required:** ✅ Yes (Admin)
 - **Description:** Cập nhật role
 
 **Request:**
+
 ```json
 {
   "name": "Dispatcher",
@@ -1677,6 +1822,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1688,12 +1834,14 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ---
 
 ### 9.5 Delete Role
+
 - **Method:** `DELETE`
 - **Endpoint:** `/api/roles/{roleId}`
 - **Auth Required:** ✅ Yes (Admin)
 - **Description:** Xóa role
 
 **Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -1707,6 +1855,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ## 🔐 Error Responses
 
 ### 400 - Bad Request
+
 ```json
 {
   "success": false,
@@ -1722,6 +1871,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ```
 
 ### 401 - Unauthorized
+
 ```json
 {
   "success": false,
@@ -1731,6 +1881,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ```
 
 ### 403 - Forbidden
+
 ```json
 {
   "success": false,
@@ -1740,6 +1891,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ```
 
 ### 404 - Not Found
+
 ```json
 {
   "success": false,
@@ -1749,6 +1901,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ```
 
 ### 500 - Internal Server Error
+
 ```json
 {
   "success": false,
@@ -1763,6 +1916,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ## 📝 Common Status Values
 
 ### Request Status
+
 - `PENDING` - Chờ xử lý
 - `ACCEPTED` - Đã chấp nhận
 - `IN_PROGRESS` - Đang xử lý
@@ -1771,6 +1925,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 - `REJECTED` - Bị từ chối
 
 ### Mission Status
+
 - `ASSIGNED` - Được phân công
 - `EN_ROUTE` - Đang di chuyển tới
 - `ON_SITE` - Đã tới hiện trường
@@ -1779,18 +1934,21 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 - `ABORTED` - Bị hủy
 
 ### Team Status
+
 - `ACTIVE` - Hoạt động
 - `INACTIVE` - Không hoạt động
 - `ON_DUTY` - Đang làm việc
 - `OFF_DUTY` - Ngoài giờ
 
 ### Priority
+
 - `CRITICAL` (1) - Cấp độ 1 - Khẩn cấp
 - `HIGH` (2) - Cấp độ 2 - Cao
 - `MEDIUM` (3) - Cấp độ 3 - Trung bình
 - `LOW` (4) - Cấp độ 4 - Thấp
 
 ### Emergency Type
+
 - `FIRE` - Cháy
 - `FLOOD` - Lũ
 - `EARTHQUAKE` - Động đất
@@ -1805,6 +1963,7 @@ Content-Disposition: attachment; filename="report_550e8400_2025-01-15.pdf"
 ## 🔑 Authentication Token Example
 
 **JWT Token Structure:**
+
 ```
 Header: {
   "alg": "HS256",
@@ -1814,7 +1973,7 @@ Header: {
 Payload: {
   "sub": "550e8400-e29b-41d4-a716-446655440000",
   "email": "user@example.com",
-  "FullName": "Nguyễn Văn A",
+  "fullName": "Nguyễn Văn A",
   "role": ["User", "Rescuer"],
   "exp": 1642339200,
   "iat": 1642252800
@@ -1822,6 +1981,7 @@ Payload: {
 ```
 
 **Usage in Request:**
+
 ```
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NTBlODQwMC1lMjliLTQxZDQtYTcxNi00NDY2NTU0NDAwMDAiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJleHAiOjE2NDIzMzkyMDB9.signature
 ```

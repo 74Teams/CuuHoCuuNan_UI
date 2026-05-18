@@ -43,6 +43,11 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
       `Bearer ${accessToken}`;
   }
 
+  if (config.data instanceof FormData) {
+    config.headers = config.headers ?? {};
+    delete (config.headers as Record<string, unknown>)["Content-Type"];
+  }
+
   return config;
 });
 
@@ -94,7 +99,26 @@ export async function apiRequest<T>(config: AxiosRequestConfig): Promise<T> {
 
 export function getApiErrorMessage(error: unknown) {
   if (axios.isAxiosError<ApiErrorResponse>(error)) {
-    return error.response?.data.message ?? error.message;
+    const data = error.response?.data;
+    if (data?.errors?.length) {
+      return data.errors
+        .map((item) => item.message)
+        .filter(Boolean)
+        .join(". ");
+    }
+    if (
+      data?.errors &&
+      typeof data.errors === "object" &&
+      !Array.isArray(data.errors)
+    ) {
+      const messages = Object.values(
+        data.errors as Record<string, string[]>,
+      )
+        .flat()
+        .filter(Boolean);
+      if (messages.length) return messages.join(". ");
+    }
+    return data?.message ?? error.message;
   }
 
   if (error instanceof Error) {

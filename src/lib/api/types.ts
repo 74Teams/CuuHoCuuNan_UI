@@ -1,9 +1,10 @@
 export type ApiRole =
   | "Admin"
+  | "Citizen"
   | "Dispatcher"
+  | "Commander"
   | "Rescuer"
-  | "RescuerLeader"
-  | "User";
+  | "RescuerLeader";
 
 export type RequestStatus =
   | "PENDING"
@@ -19,7 +20,11 @@ export type MissionStatus =
   | "IN_PROGRESS"
   | "COMPLETED"
   | "ABORTED";
-export type TeamStatus = "ACTIVE" | "INACTIVE" | "ON_DUTY" | "OFF_DUTY";
+export type TeamStatus =
+  | "AVAILABLE"
+  | "ON_MISSION"
+  | "UNAVAILABLE"
+  | "MAINTENANCE";
 export type PriorityLevel = "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
 export type EmergencyType =
   | "FIRE"
@@ -74,6 +79,7 @@ export interface AuthUserSummary {
   email: string;
   fullName: string;
   phoneNumber?: string;
+  avatarUrl?: string;
   roles: ApiRole[];
 }
 
@@ -86,8 +92,11 @@ export interface RegisterRequest {
   email: string;
   password: string;
   fullName: string;
+  userName: string;
   phoneNumber: string;
-  roles: ApiRole[];
+  address?: string;
+  dateOfBirth: string;
+  avatar?: string;
 }
 
 export interface AuthTokenPayload {
@@ -100,9 +109,12 @@ export interface AuthTokenPayload {
 export interface ProfileResponse {
   id: string;
   fullName?: string;
-  fullname?: string;
+  rescueTeamId?: string;
+  teamName?: string;
   email: string;
   phoneNumber?: string;
+  avatarUrl?: string;
+  avatar?: string;
   address?: Address;
   roles: ApiRole[];
 }
@@ -158,6 +170,10 @@ export interface RequestLocationSummary {
 export interface RequestMissionSummary {
   id: string;
   status: MissionStatus;
+  rescueTeamId?: string;
+  teamName?: string;
+  startTime?: string;
+  endTime?: string | null;
 }
 
 export interface RequestSummary {
@@ -205,9 +221,15 @@ export interface ChangeRequestStatusInput {
 
 export interface RescueTeamSummary {
   id: string;
-  name: string;
-  description?: string;
+  teamName: string;
   status: TeamStatus;
+  description?: string;
+  baseLocation: {
+    latitude: number;
+    longitude: number;
+    address?: string;
+    landmark?: string;
+  };
   leaderId?: string;
   leader?: {
     id: string;
@@ -330,4 +352,15 @@ export interface RoleSummary {
   id: string;
   name: ApiRole | string;
   description?: string;
+}
+
+// Command Center - Rescue Team Filters
+export interface RescueTeamFilter {
+  status?: TeamStatus;
+  search?: string;
+}
+
+export interface RescueTeamQueryParams extends PaginationQuery {
+  status?: TeamStatus;
+  search?: string;
 }

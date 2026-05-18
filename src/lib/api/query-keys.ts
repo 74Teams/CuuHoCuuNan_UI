@@ -12,15 +12,24 @@ export const apiQueryKeys = {
   },
   requests: {
     all: ["requests"] as const,
+    citizen: (params?: { pageSize?: number }) =>
+      ["requests", "citizen", params] as const,
+    dispatcher: (params?: object) =>
+      ["requests", "dispatcher", params] as const,
     detail: (requestId: string) => ["requests", requestId] as const,
     history: (requestId: string) => ["requests", requestId, "history"] as const,
   },
   rescueTeams: {
     all: ["rescue-teams"] as const,
+    list: (params?: object) => ["rescue-teams", "list", params] as const,
     detail: (teamId: string) => ["rescue-teams", teamId] as const,
     members: (teamId: string) => ["rescue-teams", teamId, "members"] as const,
     missions: (teamId: string) => ["rescue-teams", teamId, "missions"] as const,
-    memberDashboard: () => ["rescue-teams", "member-dashboard"] as const,
+  },
+  dashboards: {
+    citizen: ["dashboards", "citizen"] as const,
+    rescuer: () => ["dashboards", "rescuer"] as const,
+    dispatcher: ["dashboards", "dispatcher"] as const,
   },
   missions: {
     all: ["missions"] as const,

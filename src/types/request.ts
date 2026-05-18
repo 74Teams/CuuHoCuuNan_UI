@@ -88,6 +88,8 @@ export interface RequestDetail {
   //VictimInfo:?
   createdAt: string;
   updatedAt: string;
+  /** true = bản đồ công khai: ẩn PII người báo tin */
+  isPublicView?: boolean;
 }
 
 // ==========================================

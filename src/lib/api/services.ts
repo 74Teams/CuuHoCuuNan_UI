@@ -1,8 +1,8 @@
 import { apiRequest } from "./client";
 import { apiRouteBuilders, apiRoutes } from "./endpoints";
-import type { MemberDashboardData } from "@/types/rescue-team/member";
 import type {
   ApiResponse,
+  ApiRole,
   AuthTokenPayload,
   ChangeRequestStatusInput,
   ContactSummary,
@@ -13,8 +13,8 @@ import type {
   CreateRequestInput,
   CreateRescueTeamInput,
   CreateRoleInput,
-  LoginRequest,
   LocationSummary,
+  LoginRequest,
   MissionStatus,
   MissionSummary,
   MissionTimelineItem,
@@ -31,10 +31,10 @@ import type {
   UpdateMissionStatusInput,
   UpdateProfileRequest,
   UpdateRequestInput,
-  ApiRole,
   UploadAvatarResponse,
 } from "./types";
 
+import { toBackendPagination } from "./pagination";
 type RequestPageData = {
   items: RequestSummary[];
   totalCount: number;
@@ -51,6 +51,15 @@ type ReportPageData = {
   pageSize: number;
 };
 
+const requestStatusToNumber: Record<RequestStatus, number> = {
+  PENDING: 1,
+  ACCEPTED: 2,
+  IN_PROGRESS: 3,
+  COMPLETED: 4,
+  CANCELED: 5,
+  REJECTED: 6,
+};
+
 function appendIfDefined(
   formData: FormData,
   key: string,
@@ -60,7 +69,7 @@ function appendIfDefined(
     return;
   }
 
-  formData.append(key, value);
+  formData.append(key, typeof value === "number" ? String(value) : value);
 }
 
 function appendFiles(formData: FormData, key: string, files?: File[]) {
@@ -76,7 +85,23 @@ function buildRequestFormData(
   appendIfDefined(formData, "priority", payload.priority);
   appendIfDefined(formData, "description", payload.description);
   appendIfDefined(formData, "locationId", payload.locationId);
-  appendFiles(formData, "medias", payload.medias);
+  appendIfDefined(formData, "status", "PENDING");
+  appendFiles(formData, "Files", payload.medias);
+
+  return formData;
+}
+
+function buildRequestUpdateFormData(
+  request: RequestSummary,
+  overrides?: { status?: RequestStatus },
+) {
+  const formData = new FormData();
+
+  appendIfDefined(formData, "emergencyType", request.emergencyType);
+  appendIfDefined(formData, "priority", request.priority);
+  appendIfDefined(formData, "status", overrides?.status ?? request.status);
+  appendIfDefined(formData, "description", request.description);
+  appendIfDefined(formData, "locationId", request.location?.id);
 
   return formData;
 }
@@ -123,13 +148,12 @@ export const authApi = {
   },
   uploadAvatar(file: File) {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("File", file);
 
     return apiRequest<ApiResponse<UploadAvatarResponse>>({
       method: "POST",
       url: apiRoutes.auth.avatar,
       data: formData,
-      headers: { "Content-Type": "multipart/form-data" },
     });
   },
   forgotPassword(email: string) {
@@ -139,15 +163,18 @@ export const authApi = {
       data: { email },
     });
   },
-  resetPassword(payload: {
-    email: string;
-    token: string;
-    newPassword: string;
-  }) {
+  resetPassword(payload: { email: string; otp: string; newPassword: string }) {
     return apiRequest<ApiResponse<null>>({
       method: "POST",
       url: apiRoutes.auth.resetPassword,
       data: payload,
+    });
+  },
+  refresh(refreshToken: string) {
+    return apiRequest<ApiResponse<AuthTokenPayload>>({
+      method: "POST",
+      url: apiRoutes.auth.refresh,
+      data: { refreshToken },
     });
   },
 };
@@ -241,7 +268,6 @@ export const requestsApi = {
       method: "POST",
       url: apiRoutes.requests,
       data: buildRequestFormData(payload),
-      headers: { "Content-Type": "multipart/form-data" },
     });
   },
   list(
@@ -254,7 +280,12 @@ export const requestsApi = {
     return apiRequest<ApiResponse<RequestPageData>>({
       method: "GET",
       url: apiRoutes.requests,
-      params,
+      params: {
+        ...toBackendPagination(params),
+        Status: params?.status,
+        Priority: params?.priority,
+        EmergencyType: params?.emergencyType,
+      },
     });
   },
   detail(requestId: string) {
@@ -268,7 +299,6 @@ export const requestsApi = {
       method: "PUT",
       url: apiRouteBuilders.requests.byId(requestId),
       data: buildRequestFormData(payload),
-      headers: { "Content-Type": "multipart/form-data" },
     });
   },
   remove(requestId: string) {
@@ -277,11 +307,17 @@ export const requestsApi = {
       url: apiRouteBuilders.requests.byId(requestId),
     });
   },
+
   changeStatus(requestId: string, payload: ChangeRequestStatusInput) {
+    const newStatus =
+      typeof payload.newStatus === "number"
+        ? payload.newStatus
+        : requestStatusToNumber[payload.newStatus];
+
     return apiRequest<ApiResponse<null>>({
       method: "PUT",
       url: apiRouteBuilders.requests.changeStatus(requestId),
-      data: payload,
+      data: { newStatus },
     });
   },
   history(requestId: string) {
@@ -353,12 +389,6 @@ export const rescueTeamsApi = {
       params,
     });
   },
-  memberDashboard() {
-    return apiRequest<ApiResponse<MemberDashboardData>>({
-      method: "GET",
-      url: apiRouteBuilders.rescueTeams.memberDashboard(),
-    });
-  },
 };
 
 export const missionsApi = {
@@ -373,7 +403,10 @@ export const missionsApi = {
     return apiRequest<ApiResponse<MissionSummary[]>>({
       method: "GET",
       url: apiRoutes.missions,
-      params,
+      params: {
+        ...toBackendPagination(params),
+        Status: params?.status,
+      },
     });
   },
   detail(missionId: string) {
